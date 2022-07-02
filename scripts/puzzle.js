@@ -20,9 +20,14 @@ class Puzzle {
         this.div.className = "box"
         this.div.style.height = height + "px"
         this.div.style.width = width + "px"
+        this.div.style.position = "absolute"
+        this.div.style.left = "50%"
+        this.div.style.top = "50%"
+        this.div.style.transform = "translate(-50%, -50%)"
         this.height = height
         this.width = width
-        this.scale = 50
+        this.delay = 300
+        this.scale = 25
         this.blocks = height / this.scale * width / this.scale
         this.array = new Array(this.blocks)
         this.div.style.display = "flex"
@@ -31,6 +36,12 @@ class Puzzle {
 
     setup(div) {
         div.appendChild(this.div)
+    }
+
+    changeScale(scale) {
+        this.scale = scale
+        this.blocks = this.height / this.scale * this.width / this.scale
+        this.array = new Array(this.blocks)
     }
 
     swap(id1, id2) {
@@ -71,12 +82,8 @@ class Puzzle {
             if (imgUrlResponse.url.search("removed") === -1) {
                 let img = new Image()
                 img.src = imgUrl
-                while (true) {
-                    xBlocks = this.width / this.scale
-                    yBlocks = this.height / this.scale
-                    if (xBlocks !== undefined && yBlocks !== undefined) break
-                    await delay(300)
-                }
+                xBlocks = this.width / this.scale
+                yBlocks = this.height / this.scale
                 let blocks = new Array(Math.round(xBlocks * yBlocks))
                 let newRow = 0
                 for (let i = 0; i < blocks.length; i++) {
@@ -98,6 +105,17 @@ class Puzzle {
                 break
             }
         }
+    }
+
+    clear() {
+        Array.from(document.getElementsByClassName("puzzle")).forEach(element => {
+            element.remove()
+        })
+    }
+
+    async solve(delay) {
+        this.delay = delay
+        await quickSort(this.array, 0, this.array.length-1)
     }
 
 }

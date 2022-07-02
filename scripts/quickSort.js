@@ -1,6 +1,3 @@
-var puzzle
-main()
-
 async function partition(array, left, right) {
     // We take the middle element as the pivot of the array in the interval (left, right)
     let pivot = array[Math.floor((left + right) / 2)]
@@ -11,7 +8,7 @@ async function partition(array, left, right) {
         while (array[j] > pivot) j--
         if (i <= j) {
             await puzzle.swap(i, j)
-            await delay(10)
+            await delay(puzzle.delay)
             i++
             j--
         }
@@ -28,13 +25,4 @@ async function quickSort(array, left, right) {
     if (pivot < right) { 
         await quickSort(array, pivot, right);
     }
-}
-
-async function main() {
-    puzzle = new Puzzle({height: 500, width: 500})
-    let body = document.body
-    puzzle.setup(body)
-    await puzzle.fill()
-    puzzle.shufflePieces()
-    await quickSort(puzzle.array, 0, puzzle.array.length-1)
 }
